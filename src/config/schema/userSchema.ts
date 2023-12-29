@@ -25,7 +25,7 @@ export const createUserValidition = object({
       url: string({
         required_error: "business should have image",
       }).url("not an acceptable url"),
-      alt: string({}).url("not an acceptable url").optional(),
+      alt: string().optional(),
     }),
     password: string({
       required_error: "password is required",
@@ -35,7 +35,7 @@ export const createUserValidition = object({
         "password should be at least one special charcter and one upper case charcter"
       )
       .min(7, "password should be at least 7 charcters"),
-    passworConfirmation: string({
+    passwordConfirmation: string({
       required_error: "passworConfirmation is required",
     }),
     phoneNumber: string({
@@ -44,7 +44,7 @@ export const createUserValidition = object({
     email: string({
       required_error: "email is required",
     }).email("not a valid email"),
-  }).refine((data) => data.password === data.passworConfirmation, {
+  }).refine((data) => data.password === data.passwordConfirmation, {
     message: "passwords do not match",
     path: ["passworConfirmation"],
   }),
@@ -64,12 +64,27 @@ export interface IUser {
   orders: string[];
   theme: string;
 }
-
-// And
+export const ObjectId = string().refine((id) => /^[a-f\d]{24}$/i.test(id), {
+  message: "Invalid ObjectId",
+});
+const UUIDv4 = string().refine(
+  (id) =>
+    /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/i.test(
+      id
+    ),
+  {
+    message: "Invalid code",
+  }
+);
 export const verifyUser = object({
   params: object({
-    email: string(),
-    verificationCode: string(),
+    email: string().email("not a valid email"),
+    verificationCode: UUIDv4,
+  }),
+});
+export const getUser = object({
+  params: object({
+    UserId: ObjectId,
   }),
 });
 export const forgotPassword = object({
@@ -81,8 +96,10 @@ export const forgotPassword = object({
 });
 export const passwordReset = object({
   params: object({
-    email: string(),
-    passwodResetCode: string(),
+    email: string().email("not a valid email"),
+    passwodResetCode: string({
+      required_error: "passwodResetCode is required",
+    }),
   }),
   body: object({
     password: string({

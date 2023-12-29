@@ -1,6 +1,9 @@
 import { Router } from "express";
 import { validate } from "../middleware/validation";
-import { createOrderSchema } from "../config/schema/orderSchema";
+import {
+  createOrderSchema,
+  getOrderSchema,
+} from "../config/schema/orderSchema";
 import { authHandlers } from "../middleware/authHandler";
 import { orderHandlers } from "../middleware/orderHandler";
 
@@ -18,6 +21,7 @@ router.get(
 );
 router.get(
   "/:orderId",
+  validate(getOrderSchema),
   authHandlers.UserIsVerified,
   orderHandlers.GetOrderHandler
 );

@@ -57,7 +57,7 @@ export class User {
   isBusiness: boolean;
   @prop()
   orders: string[];
-  @prop()
+  @prop({ default: "light" })
   theme: string;
 }
 const UserModel = getModelForClass(User);

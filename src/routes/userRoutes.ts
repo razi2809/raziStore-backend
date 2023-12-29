@@ -3,6 +3,7 @@ import {
   Theme,
   createUserValidition,
   forgotPassword,
+  getUser,
   passwordReset,
   verifyUser,
 } from "../config/schema/userSchema";
@@ -33,5 +34,5 @@ router.post(
 );
 router.post("/theme", validate(Theme), userHandlers.changeUserTheme);
 router.get("/", authHandlers.UserIsAdmin, userHandlers.getUsersHandler);
-router.get("/:UserId", userHandlers.getUserHandler);
+router.get("/:UserId", validate(getUser), userHandlers.getUserHandler);
 export { router as userRoter };

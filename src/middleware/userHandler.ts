@@ -44,7 +44,7 @@ const userHandlers: {
         return next(new myError("user does not exist on data base", 404));
       }
       if (user.verified) {
-        return res.send("user is already verified");
+        return res.status(300).send("user is already verified");
       }
       if (user.verificationCode === verificationCode) {
         user.verified = true;

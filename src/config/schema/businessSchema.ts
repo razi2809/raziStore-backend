@@ -1,5 +1,6 @@
 import { TypeOf, boolean, date, number, object, string, z } from "zod";
 import { phoneNumberPattern } from "./pattern";
+import { ObjectId } from "./userSchema";
 const timeAsString = z
   .string()
   .refine((value) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(value), {
@@ -46,5 +47,10 @@ export const createBusinessSchema = object({
       Saturday: OpeningHoursSchema,
       Sunday: OpeningHoursSchema,
     }),
+  }),
+});
+export const getBusiness = object({
+  params: object({
+    BusinessId: ObjectId,
   }),
 });

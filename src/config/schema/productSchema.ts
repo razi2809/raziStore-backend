@@ -1,6 +1,10 @@
 import { TypeOf, array, boolean, number, object, string } from "zod";
+import { ObjectId } from "./userSchema";
 
 export const createProductSchema = object({
+  params: object({
+    businessId: ObjectId,
+  }),
   body: object({
     productName: string({
       required_error: "productName is required",
@@ -21,8 +25,6 @@ export const createProductSchema = object({
 });
 export const getProductSchema = object({
   params: object({
-    ProductId: string({
-      required_error: "ProductId is required",
-    }),
+    ProductId: ObjectId,
   }),
 });

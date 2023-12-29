@@ -10,6 +10,9 @@ const productHandlers: {
   createproductHandler: async (req, res, next) => {
     const body = req.body;
     const { businessId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(businessId)) {
+      return next(new myError("Invalid business ID", 400));
+    }
     try {
       const product = await productServies.createProduct(body, businessId);
       return res.status(200).send("product successfully created");
@@ -24,7 +27,6 @@ const productHandlers: {
     }
     try {
       const product = await productServies.findProductsById(ProductId);
-
       if (!product) {
         return next(
           new myError(
