@@ -19,7 +19,6 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
       message: "invalid json",
     });
   }
-  // if(err.code === 11000 && ){}
   return res.status(500).json({
     message: err.message,
   });

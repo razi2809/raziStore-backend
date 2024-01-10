@@ -4,6 +4,7 @@ import {
   modelOptions,
   prop,
 } from "@typegoose/typegoose";
+import { Image } from "./classes";
 
 class business {
   @prop()
@@ -11,7 +12,7 @@ class business {
   @prop()
   businessName: string;
   @prop({ required: true, unique: false })
-  businessImage: string;
+  businessImage: Image;
 }
 class product {
   @prop()
@@ -19,10 +20,13 @@ class product {
   @prop()
   productName: string;
   @prop({ required: true })
-  productImage: string;
+  productImage: Image;
   @prop({ required: true })
   productPrice: string;
+  @prop({ required: true })
+  productQuantity: number;
 }
+
 @modelOptions({
   schemaOptions: {
     timestamps: true,

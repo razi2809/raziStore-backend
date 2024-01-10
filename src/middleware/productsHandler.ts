@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 const productHandlers: {
   createproductHandler: RequestHandler;
   GetproductHandler: RequestHandler;
+  likeUnlikbusinessHandler: RequestHandler;
 } = {
   createproductHandler: async (req, res, next) => {
     const body = req.body;
@@ -38,6 +39,27 @@ const productHandlers: {
       return res
         .status(200)
         .json({ message: "product fetch successfully", product: product });
+    } catch (e) {
+      return next(e);
+    }
+  },
+  likeUnlikbusinessHandler: async (req, res, next) => {
+    const { ProductId } = req.params;
+    const { userId } = req.JWT!;
+    try {
+      const product = await productServies.findProductsById(ProductId);
+      if (!product) {
+        return next(new myError("product not found in database", 404));
+      }
+      if (product.likes.includes(userId)) {
+        product.likes = product.likes.filter((id) => id !== userId);
+        await product.save();
+        return res.status(200).send("Unliked product");
+      } else {
+        product.likes.push(userId);
+        await product.save();
+        return res.status(200).send("Liked product");
+      }
     } catch (e) {
       return next(e);
     }

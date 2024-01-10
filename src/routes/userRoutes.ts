@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   Theme,
+  addAdressSchema,
   createUserValidition,
   forgotPassword,
   getUser,
@@ -28,11 +29,27 @@ router.post(
   userHandlers.userForgotPasswordHandler
 );
 router.post(
-  "/resetPassword/:email/:passwodResetCode",
+  "/resetPassword/:email/:passwordResetCode",
   validate(passwordReset),
   userHandlers.resetPasswordHadler
 );
 router.post("/theme", validate(Theme), userHandlers.changeUserTheme);
 router.get("/", authHandlers.UserIsAdmin, userHandlers.getUsersHandler);
-router.get("/:UserId", validate(getUser), userHandlers.getUserHandler);
+router.get(
+  "/:UserId",
+  validate(getUser),
+
+  userHandlers.getUserHandler
+);
+router.get(
+  "/likes/likedplaces/:userId",
+  authHandlers.UserIsVerified,
+  userHandlers.getLikedPlaces
+);
+router.patch(
+  "/address/addNew",
+  validate(addAdressSchema),
+  authHandlers.UserIsVerified,
+  userHandlers.addUserAdress
+);
 export { router as userRoter };

@@ -17,13 +17,17 @@ export const createProductSchema = object({
     }),
     onSale: boolean().optional(),
     salePrice: number().optional(),
-    productImage: string({
-      required_error: "product should have image",
-    }).url("not an acceptable url"),
+    productImage: object({
+      url: string({
+        required_error: "business should have image",
+      }).url("not an acceptable url"),
+      alt: string({}).optional(),
+    }),
     categories: array(string()),
+    productQuantity: number({ required_error: "productQuantity is required" }),
   }),
 });
-export const getProductSchema = object({
+export const ProductSchema = object({
   params: object({
     ProductId: ObjectId,
   }),

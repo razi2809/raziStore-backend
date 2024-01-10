@@ -1,12 +1,32 @@
 import BusinessModel, {
   Business,
 } from "../config/dataBase/models/businessModel";
+import { v4 as uuidv4 } from "uuid";
 
 /* export function createUser(input:Partial<User>){
     return UserModel.create(input)
 } */
 const BusinessServices = {
   createBusiness(input: Partial<Business>) {
+    if (input.address) {
+      input.address = {
+        city: input.address.city,
+        street: input.address.street,
+        buildingNumber: input.address.buildingNumber,
+        addressName: "default",
+        state: "isreal",
+        id: uuidv4(),
+      };
+    } else {
+      input.address = {
+        state: "Israel",
+        id: uuidv4(),
+        street: "Bograsov",
+        city: "Tel-aviv",
+        buildingNumber: 1,
+        addressName: "default",
+      };
+    }
     return BusinessModel.create(input);
   },
   findBusinessById(id: string) {

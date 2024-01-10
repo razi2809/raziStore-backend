@@ -81,9 +81,13 @@ const authHandlers: {
       return next(new myError("token is missing", 403));
     }
     const user = await userServices.findUserByEmail(TokenInfo.email);
+    if (!user) {
+      return next(new myError("user not found", 404));
+    }
     if (user?.verified) {
       log.info("user is verified");
       req.JWT = TokenInfo;
+      req.user = user;
       return next();
     }
     return next(new myError("user is not verified", 403));

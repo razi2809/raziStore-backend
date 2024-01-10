@@ -10,6 +10,7 @@ const businessHandlers: {
   createbusinessHandler: RequestHandler;
   findbusinessesHandler: RequestHandler;
   findbusinessHandler: RequestHandler;
+  likeUnlikbusinessHandler: RequestHandler;
 } = {
   createbusinessHandler: async (req, res, next) => {
     const body = req.body;
@@ -28,12 +29,10 @@ const businessHandlers: {
           new myError("at the moment there is no active businesses", 404)
         );
       }
-      return res
-        .status(200)
-        .json({
-          message: "business fetched successfully",
-          businesses: businesses,
-        });
+      return res.status(200).json({
+        message: "business fetched successfully",
+        businesses: businesses,
+      });
     } catch (e) {
       return next(e);
     }
@@ -59,6 +58,27 @@ const businessHandlers: {
         business: business,
         products: businessProduct,
       });
+    } catch (e) {
+      return next(e);
+    }
+  },
+  likeUnlikbusinessHandler: async (req, res, next) => {
+    const { BusinessId } = req.params;
+    const { userId } = req.JWT!;
+    try {
+      const business = await BusinessServices.findBusinessById(BusinessId);
+      if (!business) {
+        return next(new myError("business not found in database", 404));
+      }
+      if (business.likes.includes(userId)) {
+        business.likes = business.likes.filter((id) => id !== userId);
+        await business.save();
+        return res.status(200).send("Unliked business");
+      } else {
+        business.likes.push(userId);
+        await business.save();
+        return res.status(200).send("Liked business");
+      }
     } catch (e) {
       return next(e);
     }

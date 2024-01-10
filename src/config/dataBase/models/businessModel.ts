@@ -21,6 +21,8 @@ export class Business {
   businessPhoneNumber: string;
   @prop({ required: true, unique: true })
   businessName: string;
+  @prop({ required: true, unique: true })
+  businessDescription: string;
   @prop({ required: true })
   address: Address;
   @prop({ required: true, unique: false })

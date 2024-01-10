@@ -4,6 +4,7 @@ import {
   modelOptions,
   prop,
 } from "@typegoose/typegoose";
+import { Image } from "./classes";
 
 @modelOptions({
   schemaOptions: {
@@ -12,9 +13,9 @@ import {
   options: { allowMixed: Severity.ALLOW },
 })
 export class Product {
-  @prop({ required: true, unique: true })
+  @prop({ required: true })
   productName: string;
-  @prop({ required: true, unique: true })
+  @prop({ required: true })
   description: string;
   @prop({ required: true })
   price: number;
@@ -23,13 +24,15 @@ export class Product {
   @prop()
   salePrice: number;
   @prop({ required: true, unique: false })
-  productImage: string;
+  productImage: Image;
   @prop({ required: true })
   businessId: string;
   @prop({ required: true, unique: false })
   categories: string[];
   @prop()
   likes: string[];
+  @prop()
+  productQuantity: number;
 }
 const ProductModel = getModelForClass(Product);
 export default ProductModel;

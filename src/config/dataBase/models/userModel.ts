@@ -33,7 +33,7 @@ export class User {
   @prop({ required: true })
   name: Name;
   @prop({ required: true })
-  address: Address;
+  address: Address[];
   @prop({ required: true, unique: false })
   image: Image;
   @prop({ required: true })

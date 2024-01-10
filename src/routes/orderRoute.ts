@@ -12,10 +12,10 @@ router.post(
   "/newOrder/:BusinessId",
   validate(createOrderSchema),
   authHandlers.UserIsVerified,
-  orderHandlers.crateNewOrderHandler
+  orderHandlers.createNewOrderHandler
 );
 router.get(
-  "/",
+  "/:userId",
   authHandlers.UserIsVerified,
   orderHandlers.GetOrderHistoryHandler
 );

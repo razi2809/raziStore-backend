@@ -1,6 +1,6 @@
 import {
   createProductSchema,
-  getProductSchema,
+  ProductSchema,
 } from "../config/schema/productSchema";
 import { authHandlers } from "../middleware/authHandler";
 import { productHandlers } from "../middleware/productsHandler";
@@ -16,7 +16,13 @@ router.post(
 );
 router.get(
   "/:ProductId",
-  validate(getProductSchema),
+  validate(ProductSchema),
   productHandlers.GetproductHandler
+);
+router.patch(
+  "/:ProductId",
+  validate(ProductSchema),
+  authHandlers.UserIsVerified,
+  productHandlers.likeUnlikbusinessHandler
 );
 export { router as prodectRotue };

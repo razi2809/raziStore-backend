@@ -5,9 +5,9 @@ import { myError } from "../errors/errorType";
 import log from "../config/utils/logger";
 import mongoose, { ObjectId, Types } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
-import { Request, Response, NextFunction } from "express";
-import { passwodResetInput } from "../config/schema/userSchema";
+
 import { jwtServices } from "../services/jwtServices";
+import BusinessModel from "../config/dataBase/models/businessModel";
 
 const userHandlers: {
   createUserHandler: RequestHandler;
@@ -17,10 +17,14 @@ const userHandlers: {
   getUsersHandler: RequestHandler;
   getUserHandler: RequestHandler;
   changeUserTheme: RequestHandler;
+  getLikedPlaces: RequestHandler;
+  addUserAdress: RequestHandler;
 } = {
   createUserHandler: async (req, res, next) => {
+    // Handler to create a new user
     const body = req.body;
     try {
+      // Create user and send verification email
       const user = await userServices.createUser(body);
       await sendEmail({
         from: "razi289@outlook.com",
@@ -30,10 +34,11 @@ const userHandlers: {
       });
       return res.status(200).send("User successfully created");
     } catch (e) {
-      return next(e);
+      return next(e); // Error handling
     }
   },
   verifyUserHandler: async (req, res, next) => {
+    // Handler to verify a user's email
     const { email } = req.params;
     const { verificationCode } = req.params;
     //find the user by id to check if already verified
@@ -57,10 +62,12 @@ const userHandlers: {
     }
   },
   userForgotPasswordHandler: async (req, res, next) => {
+    // Handler for user's forgot password request
     const { email } = req.body;
     const message =
       "if a user with that email is registerd you will receive a password rest email";
     try {
+      // Process forgot password request and send email if user exists
       const user = await userServices.findUserByEmail(email);
       if (!user) {
         log.info(`user with email ${email} does not exist`);
@@ -85,24 +92,31 @@ const userHandlers: {
     }
   },
   resetPasswordHadler: async (req, res, next) => {
-    const { email, passwodResetCode } = req.params;
+    // Handler to reset a user's password
+    const { email, passwordResetCode } = req.params;
     const { password } = req.body;
-    const user = await userServices.findUserByEmail(email);
-    if (
-      !user ||
-      !user.passwordResetCode ||
-      user.passwordResetCode !== passwodResetCode
-    ) {
-      return next(new myError("could not reset password", 400));
+    // Validate reset code and update password
+    try {
+      const user = await userServices.findUserByEmail(email);
+      if (
+        !user ||
+        !user.passwordResetCode ||
+        user.passwordResetCode !== passwordResetCode
+      ) {
+        return next(new myError("could not reset password", 400));
+      }
+      user.passwordResetCode = null;
+      user.password = password;
+      await user.save();
+      return res.status(200).send("password changed");
+    } catch (e) {
+      return next(e);
     }
-    user.passwordResetCode = null;
-    user.password = password;
-    await user.save();
-    return res.status(200).send("password changed");
   },
   getUsersHandler: async (req, res, next) => {
+    // Handler to get all users (Admin access required)
     const users = await userServices.getUsers().lean();
-
+    // Fetch all users and remove sensitive information before sending
     if (users.length === 0) {
       return next(new myError("problem fetching users", 404));
     }
@@ -123,7 +137,10 @@ const userHandlers: {
     });
   },
   getUserHandler: async (req, res, next) => {
+    // Handler to get a specific user's details
     const TokenInfo = jwtServices.extractToken(req);
+    // Fetch user details based on TokenInfo or requested UserId
+
     if (TokenInfo instanceof myError) {
       return next(TokenInfo);
     }
@@ -141,7 +158,6 @@ const userHandlers: {
           password,
           verificationCode,
           validatePassword,
-          verified,
           passwordResetCode,
           ...rest
         } = myUser;
@@ -161,7 +177,6 @@ const userHandlers: {
         password,
         verificationCode,
         validatePassword,
-        verified,
         passwordResetCode,
         ...rest
       } = askedUser;
@@ -173,6 +188,7 @@ const userHandlers: {
     }
   },
   changeUserTheme: async (req, res, next) => {
+    // Handler to change a user's theme preference
     const TokenInfo = jwtServices.extractToken(req);
     const body = req.body;
     const { Theme } = body;
@@ -191,6 +207,62 @@ const userHandlers: {
       myUser.theme = Theme;
       myUser.save();
       return res.status(200).json({ message: `user theme is ${Theme}` });
+    } catch (e) {
+      return next(e);
+    }
+  },
+  getLikedPlaces: async (req, res, next) => {
+    // Handler to get liked places of a user
+    const TokenInfo = req.JWT!;
+    const { userId } = TokenInfo;
+    // Fetch liked places for the user or requested user (for Admins)
+    try {
+      const myUser = await userServices.findUserById(userId).lean();
+      if (!myUser) {
+        return next(new myError("could get your user", 500));
+      }
+      if (!myUser.isAdmin) {
+        const likedBusinesses = await BusinessModel.find({
+          likes: { $in: [userId] },
+        });
+        return res.status(200).json({
+          message: "user liked places fetched successfully",
+          likedPlaces: likedBusinesses,
+        });
+      }
+      const { userId: askedUserId } = req.params;
+      if (!mongoose.Types.ObjectId.isValid(askedUserId)) {
+        return next(new myError("Invalid User ID", 400));
+      }
+      const likedBusinesses = await BusinessModel.find({
+        likes: { $in: [askedUserId] },
+      });
+      return res.status(200).json({
+        message: "user liked places fetched successfully",
+        likedPlaces: likedBusinesses,
+      });
+    } catch (e) {
+      return next(e);
+    }
+  },
+  addUserAdress: async (req, res, next) => {
+    // Handler to add a new address fomr a user
+    const TokenInfo = jwtServices.extractToken(req);
+    const { address } = req.body;
+    // Add new address to user's profile
+    if (TokenInfo instanceof myError) {
+      return next(TokenInfo);
+    }
+    if (!TokenInfo) {
+      return next(new myError("token is missing", 403));
+    }
+    const { userId } = TokenInfo;
+    try {
+      const addAddress = await userServices.addAddressToUser(userId, address);
+      if (addAddress === "address exist") {
+        return next(new myError("address already exists", 403));
+      }
+      return res.status(200).json({ message: "address saved successfully" });
     } catch (e) {
       return next(e);
     }

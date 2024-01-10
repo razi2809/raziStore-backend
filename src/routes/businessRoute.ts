@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { authHandlers } from "../middleware/authHandler";
 import {
+  Business,
   createBusinessSchema,
-  getBusiness,
 } from "../config/schema/businessSchema";
 import { validate } from "../middleware/validation";
 import { businessHandlers } from "../middleware/businessHandler";
@@ -17,8 +17,13 @@ router.post(
 router.get("/", businessHandlers.findbusinessesHandler);
 router.get(
   "/:BusinessId",
-  validate(getBusiness),
+  validate(Business),
   businessHandlers.findbusinessHandler
 );
-
+router.patch(
+  "/:BusinessId",
+  validate(Business),
+  authHandlers.UserIsVerified,
+  businessHandlers.likeUnlikbusinessHandler
+);
 export { router as businessRotue };

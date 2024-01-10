@@ -3,7 +3,8 @@ import { prop } from "@typegoose/typegoose";
 export class Address {
   @prop({ default: "Israel" })
   state: string;
-
+  @prop({ default: "default" })
+  addressName: string;
   @prop({ default: "Bograsov" })
   street: string;
 
@@ -12,6 +13,8 @@ export class Address {
 
   @prop({ default: 1 })
   buildingNumber: Number;
+  @prop({ required: true })
+  id: string;
 }
 export class OpeningHoursInDay {
   @prop()

@@ -16,6 +16,9 @@ export const createBusinessSchema = object({
     businessName: string({
       required_error: "businessName is required",
     }),
+    businessDescription: string({
+      required_error: "businessDescription is required",
+    }),
     businessPhoneNumber: string({
       required_error: "phoneNumber is required",
     }).regex(phoneNumberPattern, "invaild phone number"),
@@ -35,7 +38,7 @@ export const createBusinessSchema = object({
       url: string({
         required_error: "business should have image",
       }).url("not an acceptable url"),
-      alt: string({}).url("not an acceptable url").optional(),
+      alt: string({}).optional(),
     }),
 
     OpeningHours: object({
@@ -49,7 +52,7 @@ export const createBusinessSchema = object({
     }),
   }),
 });
-export const getBusiness = object({
+export const Business = object({
   params: object({
     BusinessId: ObjectId,
   }),

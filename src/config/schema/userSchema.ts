@@ -1,7 +1,23 @@
-import { TypeOf, number, object, string, z } from "zod";
+import { TypeOf, array, number, object, string, z } from "zod";
 import { passwordPattern, phoneNumberPattern } from "./pattern";
 import { Address, Image, Name } from "../dataBase/models/classes";
-
+const address = object({
+  city: string({
+    required_error: "city is required",
+  }),
+  street: string({
+    required_error: "street is required",
+  }),
+  buildingNumber: number({
+    required_error: "buildingNumber is required",
+  }),
+  addressName: string({
+    required_error: "addressName is required",
+  }),
+});
+export const addAdressSchema = object({
+  body: object({ address }),
+});
 export const createUserValidition = object({
   body: object({
     name: object({
@@ -12,15 +28,7 @@ export const createUserValidition = object({
         required_error: "lastName is required",
       }),
     }),
-    address: object({
-      city: string().optional(),
-      street: string({
-        required_error: "street is required",
-      }),
-      buildingNumber: number({
-        required_error: "buildingNumber is required",
-      }),
-    }),
+    address: array(address),
     image: object({
       url: string({
         required_error: "business should have image",
@@ -36,7 +44,7 @@ export const createUserValidition = object({
       )
       .min(7, "password should be at least 7 charcters"),
     passwordConfirmation: string({
-      required_error: "passworConfirmation is required",
+      required_error: "passwordConfirmation is required",
     }),
     phoneNumber: string({
       required_error: "phoneNumber is required",
@@ -52,7 +60,7 @@ export const createUserValidition = object({
 export interface IUser {
   email: string;
   name: Name;
-  adsress: Address;
+  address: Address[];
   image: Image;
   password: string;
   verificationCode: string;
@@ -97,9 +105,7 @@ export const forgotPassword = object({
 export const passwordReset = object({
   params: object({
     email: string().email("not a valid email"),
-    passwodResetCode: string({
-      required_error: "passwodResetCode is required",
-    }),
+    passwordResetCode: UUIDv4,
   }),
   body: object({
     password: string({
