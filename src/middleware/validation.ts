@@ -11,7 +11,7 @@ const validate = (schema: AnyZodObject) => {
       });
       next();
     } catch (error: any) {
-      res.status(400).send(error.errors);
+      return res.status(400).send(error.errors);
     }
   };
 };

@@ -3,6 +3,7 @@ import { orderservices } from "../services/orderServices";
 import { myError } from "../errors/errorType";
 import mongoose from "mongoose";
 import { userServices } from "../services/userServices";
+import log from "../config/utils/logger";
 
 const orderHandlers: {
   createNewOrderHandler: RequestHandler;
@@ -76,6 +77,7 @@ const orderHandlers: {
     // Handler for getting details of a specific order
     const { userId } = req.JWT!;
     const { orderId } = req.params;
+    log.info(orderId);
     // Validate orderId
     if (!mongoose.Types.ObjectId.isValid(orderId)) {
       return next(new myError("Invalid order ID", 400));

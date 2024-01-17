@@ -3,7 +3,6 @@ import { userServices } from "../services/userServices";
 import { myError } from "../errors/errorType";
 import { jwtServices } from "../services/jwtServices";
 import log from "../config/utils/logger";
-import { User } from "../config/dataBase/models/userModel";
 
 const authHandlers: {
   logInHandler: RequestHandler;
@@ -41,13 +40,7 @@ const authHandlers: {
     }
   },
   UserIsAdmin: async (req, res, next) => {
-    const TokenInfo = jwtServices.extractToken(req);
-    if (TokenInfo instanceof myError) {
-      return next(TokenInfo);
-    }
-    if (!TokenInfo) {
-      return next(new myError("token is missing", 403));
-    }
+    const TokenInfo = req.JWT!;
     const user = await userServices.findUserByEmail(TokenInfo.email);
     if (user?.isAdmin) {
       log.info("user auth level is admin");
@@ -57,13 +50,7 @@ const authHandlers: {
     return next(new myError("user is not permitted", 403));
   },
   UserIsBusiness: async (req, res, next) => {
-    const TokenInfo = jwtServices.extractToken(req);
-    if (TokenInfo instanceof myError) {
-      return next(TokenInfo);
-    }
-    if (!TokenInfo) {
-      return next(new myError("token is missing", 403));
-    }
+    const TokenInfo = req.JWT!;
     const user = await userServices.findUserByEmail(TokenInfo.email);
     if (user?.isBusiness) {
       log.info("user auth level is business");
@@ -73,13 +60,8 @@ const authHandlers: {
     return next(new myError("user is not permitted", 403));
   },
   UserIsVerified: async (req, res, next) => {
-    const TokenInfo = jwtServices.extractToken(req);
-    if (TokenInfo instanceof myError) {
-      return next(TokenInfo);
-    }
-    if (!TokenInfo) {
-      return next(new myError("token is missing", 403));
-    }
+    const TokenInfo = req.JWT!;
+
     const user = await userServices.findUserByEmail(TokenInfo.email);
     if (!user) {
       return next(new myError("user not found", 404));
@@ -93,13 +75,8 @@ const authHandlers: {
     return next(new myError("user is not verified", 403));
   },
   UserIsNotVerified: async (req, res, next) => {
-    const TokenInfo = jwtServices.extractToken(req);
-    if (TokenInfo instanceof myError) {
-      return next(TokenInfo);
-    }
-    if (!TokenInfo) {
-      return next(new myError("token is missing", 403));
-    }
+    const TokenInfo = req.JWT!;
+
     const user = await userServices.findUserByEmail(TokenInfo.email);
     if (!user?.verified) {
       log.info("user is not verified");

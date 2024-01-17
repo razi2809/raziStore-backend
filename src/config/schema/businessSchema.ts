@@ -52,8 +52,46 @@ export const createBusinessSchema = object({
     }),
   }),
 });
+export const businessEmailChange = object({
+  params: object({
+    BusinessId: ObjectId,
+  }),
+  body: object({
+    businessEmail: string().email("not a valid email"),
+  }),
+});
 export const Business = object({
   params: object({
     BusinessId: ObjectId,
+  }),
+});
+export const businessNameChange = object({
+  params: object({
+    BusinessId: ObjectId,
+  }),
+  body: object({
+    businessName: string({
+      required_error: "businessName is required",
+    }),
+  }),
+});
+export const businessPhoneChange = object({
+  params: object({
+    BusinessId: ObjectId,
+  }),
+  body: object({
+    businessPhoneNumber: string({
+      required_error: "phoneNumber is required",
+    }).regex(phoneNumberPattern, "invaild phone number"),
+  }),
+});
+export const businessDescriptionChange = object({
+  params: object({
+    BusinessId: ObjectId,
+  }),
+  body: object({
+    businessDescription: string({
+      required_error: "businessDescription is required",
+    }),
   }),
 });

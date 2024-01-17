@@ -31,7 +31,7 @@ export const createUserValidition = object({
     address: array(address),
     image: object({
       url: string({
-        required_error: "business should have image",
+        required_error: "user should have image",
       }).url("not an acceptable url"),
       alt: string().optional(),
     }),
@@ -124,9 +124,46 @@ export const Theme = object({
     Theme: z.enum(["dark", "light"]),
   }),
 });
-export type verifyUserInput = TypeOf<typeof verifyUser>["params"];
-export type createUserValiditionInput = TypeOf<
-  typeof createUserValidition
->["body"];
-export type forgotPasswordInput = TypeOf<typeof forgotPassword>["body"];
-export type passwodResetInput = TypeOf<typeof passwordReset>;
+export const image = object({
+  params: object({
+    UserId: ObjectId,
+  }),
+  body: object({
+    image: string({
+      required_error: "user should have image",
+    }).url("not an acceptable url"),
+  }),
+});
+export const nameChange = object({
+  params: object({
+    UserId: ObjectId,
+  }),
+  body: object({
+    name: object({
+      firstName: string({
+        required_error: "firstName is required",
+      }),
+      lastName: string({
+        required_error: "lastName is required",
+      }),
+    }),
+  }),
+});
+export const userEmailChange = object({
+  params: object({
+    UserId: ObjectId,
+  }),
+  body: object({
+    email: string().email("not a valid email"),
+  }),
+});
+export const phoneChange = object({
+  params: object({
+    UserId: ObjectId,
+  }),
+  body: object({
+    phoneNumber: string({
+      required_error: "phoneNumber is required",
+    }).regex(phoneNumberPattern, "invaild phone number"),
+  }),
+});

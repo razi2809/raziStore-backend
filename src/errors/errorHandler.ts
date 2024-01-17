@@ -8,8 +8,9 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     });
   }
   if (err.code && err.code == 11000 && err.keyPattern && err.keyValue) {
+    const duplicateField = Object.keys(err.keyPattern)[0];
     return res.status(400).json({
-      message: "Duplicate Key - Must be Unique",
+      message: `already exist - ${duplicateField} must be unique,`,
       property: err.keyValue,
       index: err.keyPattern,
     });

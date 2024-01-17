@@ -6,22 +6,26 @@ import {
 } from "../config/schema/orderSchema";
 import { authHandlers } from "../middleware/authHandler";
 import { orderHandlers } from "../middleware/orderHandler";
+import { tokenHandlers } from "../middleware/tokenHandler";
 
 const router = Router();
 router.post(
   "/newOrder/:BusinessId",
   validate(createOrderSchema),
+  tokenHandlers.tokenExtractor,
   authHandlers.UserIsVerified,
   orderHandlers.createNewOrderHandler
 );
 router.get(
   "/:userId",
+  tokenHandlers.tokenExtractor,
   authHandlers.UserIsVerified,
   orderHandlers.GetOrderHistoryHandler
 );
 router.get(
-  "/:orderId",
+  "/getOrder/:orderId",
   validate(getOrderSchema),
+  tokenHandlers.tokenExtractor,
   authHandlers.UserIsVerified,
   orderHandlers.GetOrderHandler
 );

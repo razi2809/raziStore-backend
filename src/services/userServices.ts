@@ -1,4 +1,4 @@
-import { Address } from "../config/dataBase/models/classes";
+import { Address, Name } from "../config/dataBase/models/classes";
 import UserModel, { User } from "../config/dataBase/models/userModel";
 import { v4 as uuidv4 } from "uuid";
 import log from "../config/utils/logger";
@@ -50,9 +50,57 @@ const userServices = {
       }
       newAddress.state = "Israel";
       newAddress.id = uuidv4();
-      log.info(newAddress);
       user.address.push(newAddress);
       await user.save();
+    }
+  },
+  deleteUser(userId: string) {
+    return UserModel.deleteOne({ _id: userId });
+  },
+  updateProfilePicture: async (userId: string, url: string) => {
+    const user = await UserModel.findById(userId);
+    if (user && user.image) {
+      user.image.url = url;
+      user.save();
+    }
+  },
+  updateName: async (userId: string, name: Name) => {
+    const user = await UserModel.findById(userId);
+    if (user) {
+      user.name = name;
+      user.save();
+    }
+  },
+  updateEmail: async (userId: string, email: string) => {
+    try {
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        userId,
+        { email },
+        { new: true }
+      );
+      if (!updatedUser) {
+        throw new Error("User not found");
+      }
+      return updatedUser;
+    } catch (error) {
+      // Handle or throw the error as per your error handling strategy
+      throw error;
+    }
+  },
+  updatePhone: async (userId: string, phoneNumber: string) => {
+    try {
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        userId,
+        { phoneNumber },
+        { new: true }
+      );
+      if (!updatedUser) {
+        throw new Error("User not found");
+      }
+      return updatedUser;
+    } catch (error) {
+      // Handle or throw the error as per your error handling strategy
+      throw error;
     }
   },
 };

@@ -6,11 +6,13 @@ import { authHandlers } from "../middleware/authHandler";
 import { productHandlers } from "../middleware/productsHandler";
 import { Router } from "express";
 import { validate } from "../middleware/validation";
+import { tokenHandlers } from "../middleware/tokenHandler";
 const router = Router();
 
 router.post(
   "/newProduct/:businessId",
   validate(createProductSchema),
+  tokenHandlers.tokenExtractor,
   authHandlers.UserIsBusiness,
   productHandlers.createproductHandler
 );
@@ -22,6 +24,7 @@ router.get(
 router.patch(
   "/:ProductId",
   validate(ProductSchema),
+  tokenHandlers.tokenExtractor,
   authHandlers.UserIsVerified,
   productHandlers.likeUnlikbusinessHandler
 );

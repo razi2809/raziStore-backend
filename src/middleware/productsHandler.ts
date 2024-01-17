@@ -16,7 +16,7 @@ const productHandlers: {
     }
     try {
       const product = await productServies.createProduct(body, businessId);
-      return res.status(200).send("product successfully created");
+      return res.status(200).json({ message: "product successfully created" });
     } catch (e) {
       return next(e);
     }
@@ -54,11 +54,11 @@ const productHandlers: {
       if (product.likes.includes(userId)) {
         product.likes = product.likes.filter((id) => id !== userId);
         await product.save();
-        return res.status(200).send("Unliked product");
+        return res.status(200).json({ message: "Unliked product" });
       } else {
         product.likes.push(userId);
         await product.save();
-        return res.status(200).send("Liked product");
+        return res.status(200).json({ message: "Liked product" });
       }
     } catch (e) {
       return next(e);
