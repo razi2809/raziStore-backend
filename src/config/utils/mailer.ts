@@ -8,8 +8,6 @@ const smpt = {
   secure: false,
 };
 
-console.log(smpt);
-
 const transporter = nodemailer.createTransport({
   ...smpt,
   auth: {
