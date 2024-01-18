@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import express from "express";
 import { configEnv } from "./config/envExtractor";
 import { connectToDB } from "./config/dataBase/connectDB";
 import { errorHandler } from "./errors/errorHandler";
