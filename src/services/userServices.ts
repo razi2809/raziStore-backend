@@ -2,6 +2,7 @@ import { Address, Name } from "../config/dataBase/models/classes";
 import UserModel, { User } from "../config/dataBase/models/userModel";
 import { v4 as uuidv4 } from "uuid";
 import log from "../config/utils/logger";
+import { myError } from "../errors/errorType";
 
 const userServices = {
   createUser(input: Partial<User>) {
@@ -35,40 +36,82 @@ const userServices = {
   getUsers() {
     return UserModel.find();
   },
+  resetPassword: async (
+    email: string,
+    passwordResetCode: string,
+    password: string
+  ) => {
+    try {
+      const user = await userServices.findUserByEmail(email);
+      if (
+        !user ||
+        !user.passwordResetCode ||
+        user.passwordResetCode !== passwordResetCode
+      ) {
+        throw new myError("could not reset password", 400);
+      }
+      user.passwordResetCode = null;
+      user.password = password;
+      await user.save();
+    } catch (error) {
+      // Handle or throw the error as per your error handling strategy
+      throw error;
+    }
+  },
   addOrderToUser: async (userId: string, orderId: string) => {
     const user = await UserModel.findById(userId);
     user?.orders.push(orderId);
     user?.save();
   },
   addAddressToUser: async (userId: string, newAddress: Address) => {
-    const user = await UserModel.findById(userId);
-    if (user) {
-      for (let userAddress of user.address) {
-        if (userAddress.addressName === newAddress.addressName) {
-          return "address exist";
+    try {
+      const user = await UserModel.findById(userId);
+      if (user) {
+        for (let userAddress of user.address) {
+          if (userAddress.addressName === newAddress.addressName) {
+            return "address exist";
+          }
         }
+        newAddress.state = "Israel";
+        newAddress.id = uuidv4();
+        user.address.push(newAddress);
+        await user.save();
+      } else {
+        throw new Error("User not found");
       }
-      newAddress.state = "Israel";
-      newAddress.id = uuidv4();
-      user.address.push(newAddress);
-      await user.save();
+    } catch (error) {
+      // Handle or throw the error as per your error handling strategy
+      throw error;
     }
   },
   deleteUser(userId: string) {
     return UserModel.deleteOne({ _id: userId });
   },
   updateProfilePicture: async (userId: string, url: string) => {
-    const user = await UserModel.findById(userId);
-    if (user && user.image) {
-      user.image.url = url;
-      user.save();
+    try {
+      const user = await UserModel.findById(userId);
+      if (user && user.image) {
+        user.image.url = url;
+        user.save();
+      } else {
+        throw new Error("User not found");
+      }
+    } catch (error) {
+      // Handle or throw the error as per your error handling strategy
+      throw error;
     }
   },
   updateName: async (userId: string, name: Name) => {
-    const user = await UserModel.findById(userId);
-    if (user) {
+    try {
+      const user = await UserModel.findById(userId);
+      if (!user) {
+        throw new Error("User not found");
+      }
       user.name = name;
       user.save();
+    } catch (error) {
+      // Handle or throw the error as per your error handling strategy
+      throw error;
     }
   },
   updateEmail: async (userId: string, email: string) => {

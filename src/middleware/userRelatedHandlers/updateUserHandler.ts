@@ -78,17 +78,11 @@ const updateUserHandlers: {
     const { password } = req.body;
     // Validate reset code and update password
     try {
-      const user = await userServices.findUserByEmail(email);
-      if (
-        !user ||
-        !user.passwordResetCode ||
-        user.passwordResetCode !== passwordResetCode
-      ) {
-        return next(new myError("could not reset password", 400));
-      }
-      user.passwordResetCode = null;
-      user.password = password;
-      await user.save();
+      const user = await userServices.resetPassword(
+        email,
+        passwordResetCode,
+        password
+      );
       return res.status(200).json({ message: "password changed" });
     } catch (e) {
       return next(e);
