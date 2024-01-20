@@ -110,7 +110,12 @@ export const passwordReset = object({
   body: object({
     password: string({
       required_error: "password is required",
-    }).min(6, "password is too short - should be min 6 chars"),
+    })
+      .regex(
+        passwordPattern,
+        "password should be at least one special charcter and one upper case charcter"
+      )
+      .min(7, "password should be at least 7 charcters"),
     passwordConfirmation: string({
       required_error: "passwordConfirmation is required",
     }),
