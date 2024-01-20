@@ -7,6 +7,7 @@ import {
 import { authHandlers } from "../middleware/authHandler";
 import { orderHandlers } from "../middleware/orderHandler";
 import { tokenHandlers } from "../middleware/tokenHandler";
+import { getUser } from "../config/schema/userSchema";
 
 const router = Router();
 router.post(
@@ -17,7 +18,8 @@ router.post(
   orderHandlers.createNewOrderHandler
 );
 router.get(
-  "/:userId",
+  "/:UserId",
+  validate(getUser),
   tokenHandlers.tokenExtractor,
   authHandlers.UserIsVerified,
   orderHandlers.GetOrderHistoryHandler

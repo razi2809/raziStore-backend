@@ -58,7 +58,8 @@ router.get(
   userHandlers.getUserHandler
 );
 router.get(
-  "/likes/likedplaces/:userId",
+  "/likes/likedplaces/:UserId",
+  validate(getUser),
   tokenHandlers.tokenExtractor,
   authHandlers.UserIsVerified,
   userHandlers.getLikedPlaces
@@ -66,6 +67,7 @@ router.get(
 router.patch(
   "/address/addNew",
   validate(addAdressSchema),
+  tokenHandlers.tokenExtractor,
   authHandlers.UserIsVerified,
   updateUserHandlers.addUserAdressHandler
 );

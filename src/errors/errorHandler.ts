@@ -1,5 +1,6 @@
 import { ErrorRequestHandler } from "express";
 import { myError } from "./errorType";
+import { ZodError } from "zod";
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   if (err instanceof myError) {
@@ -18,6 +19,11 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   if (err instanceof SyntaxError) {
     return res.status(400).json({
       message: "invalid json",
+    });
+  }
+  if (err instanceof ZodError) {
+    return res.status(400).json({
+      message: "Validation error " + err.issues.map((issue) => issue.message),
     });
   }
   return res.status(500).json({

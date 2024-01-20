@@ -32,3 +32,41 @@ export const ProductSchema = object({
     ProductId: ObjectId,
   }),
 });
+export const changeProductName = object({
+  params: object({
+    ProductId: ObjectId,
+  }),
+  body: object({
+    productName: string({
+      required_error: "productName is required",
+    }),
+  }),
+});
+export const changeProductDescription = object({
+  params: object({
+    ProductId: ObjectId,
+  }),
+  body: object({
+    productDescription: string({
+      required_error: "productDescription is required",
+    }),
+  }),
+});
+export const changeProductImage = object({
+  params: object({
+    ProductId: ObjectId,
+  }),
+  body: object({
+    url: string({
+      required_error: "product should have image",
+    }).url("not an acceptable url"),
+  }),
+});
+export const changeProductQuantity = object({
+  params: object({
+    ProductId: ObjectId,
+  }),
+  body: object({
+    productQuantity: number({ required_error: "productQuantity is required" }),
+  }),
+});

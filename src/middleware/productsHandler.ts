@@ -1,19 +1,21 @@
 import { RequestHandler } from "express";
 import productServies from "../services/productServies";
 import { myError } from "../errors/errorType";
-import mongoose from "mongoose";
+import log from "../config/utils/logger";
 
 const productHandlers: {
   createproductHandler: RequestHandler;
   GetproductHandler: RequestHandler;
-  likeUnlikbusinessHandler: RequestHandler;
+  getProductLikes: RequestHandler;
+  likeUnlikProductHandler: RequestHandler;
+  changeProductName: RequestHandler;
+  changeProductDescription: RequestHandler;
+  changeProductImage: RequestHandler;
+  changeProductQuantity: RequestHandler;
 } = {
   createproductHandler: async (req, res, next) => {
     const body = req.body;
     const { businessId } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(businessId)) {
-      return next(new myError("Invalid business ID", 400));
-    }
     try {
       const product = await productServies.createProduct(body, businessId);
       return res.status(200).json({ message: "product successfully created" });
@@ -23,9 +25,7 @@ const productHandlers: {
   },
   GetproductHandler: async (req, res, next) => {
     const { ProductId } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(ProductId)) {
-      return next(new myError("Invalid product ID", 400));
-    }
+
     try {
       const product = await productServies.findProductsById(ProductId);
       if (!product) {
@@ -43,7 +43,21 @@ const productHandlers: {
       return next(e);
     }
   },
-  likeUnlikbusinessHandler: async (req, res, next) => {
+  getProductLikes: async (req, res, next) => {
+    const { ProductId } = req.params;
+    try {
+      const users = await productServies.getUserLikes(ProductId);
+      if (!users) {
+        return next(new myError("product have no likes", 404));
+      }
+      return res
+        .status(200)
+        .json({ message: "user fetched successfully", users: users });
+    } catch (e) {
+      return next(e);
+    }
+  },
+  likeUnlikProductHandler: async (req, res, next) => {
     const { ProductId } = req.params;
     const { userId } = req.JWT!;
     try {
@@ -60,6 +74,52 @@ const productHandlers: {
         await product.save();
         return res.status(200).json({ message: "Liked product" });
       }
+    } catch (e) {
+      return next(e);
+    }
+  },
+  changeProductName: async (req, res, next) => {
+    const { ProductId } = req.params;
+    const { productName } = req.body;
+
+    try {
+      await productServies.updateName(ProductId, productName);
+      return res.status(200).json({ message: "product name was updated" });
+    } catch (e) {
+      return next(e);
+    }
+  },
+  changeProductDescription: async (req, res, next) => {
+    const { ProductId } = req.params;
+    const { productDescription } = req.body;
+
+    try {
+      await productServies.updateDescription(ProductId, productDescription);
+      return res
+        .status(200)
+        .json({ message: "product description was updated" });
+    } catch (e) {
+      return next(e);
+    }
+  },
+  changeProductImage: async (req, res, next) => {
+    const { ProductId } = req.params;
+    const { url } = req.body;
+    log.info(url);
+    try {
+      await productServies.updateImage(ProductId, url);
+      return res.status(200).json({ message: "product image was updated" });
+    } catch (e) {
+      return next(e);
+    }
+  },
+  changeProductQuantity: async (req, res, next) => {
+    const { ProductId } = req.params;
+    const { productQuantity } = req.body;
+
+    try {
+      await productServies.updateQuantity(ProductId, productQuantity);
+      return res.status(200).json({ message: "product quantity was updated" });
     } catch (e) {
       return next(e);
     }

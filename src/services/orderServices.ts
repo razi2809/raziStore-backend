@@ -35,6 +35,7 @@ const orderservices = {
             throw new myError(`Product not found in data base`, 404);
           }
           productData.productQuantity -= product.productQuantity;
+          productData.howManyOrders += 1;
           productData.save();
           return {
             productId: productData?._id,

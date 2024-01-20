@@ -31,8 +31,10 @@ export class Product {
   categories: string[];
   @prop()
   likes: string[];
-  @prop()
+  @prop({ required: true })
   productQuantity: number;
+  @prop({ required: true, default: 0 })
+  howManyOrders: number;
 }
 const ProductModel = getModelForClass(Product);
 export default ProductModel;

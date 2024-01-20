@@ -4,6 +4,7 @@ import {
   Business,
   businessDescriptionChange,
   businessEmailChange,
+  businessImageChange,
   businessNameChange,
   businessPhoneChange,
   createBusinessSchema,
@@ -40,11 +41,7 @@ router.get(
   authHandlers.UserIsBusiness,
   businessHandlers.getBusinessOrders
 );
-router.get(
-  "/:BusinessId",
-  validate(Business),
-  businessHandlers.findbusinessHandler
-);
+
 router.patch(
   "/:BusinessId",
   validate(Business),
@@ -63,18 +60,28 @@ router.patch(
   "/name/:BusinessId",
   validate(businessNameChange),
   tokenHandlers.tokenExtractor,
+  authHandlers.UserIsBusiness,
   businessHandlers.changeBusinessName
 );
 router.patch(
   "/phone/:BusinessId",
   validate(businessPhoneChange),
   tokenHandlers.tokenExtractor,
+  authHandlers.UserIsBusiness,
   businessHandlers.changeBusinessPhone
 );
 router.patch(
   "/description/:BusinessId",
   validate(businessDescriptionChange),
   tokenHandlers.tokenExtractor,
+  authHandlers.UserIsBusiness,
   businessHandlers.changeBusinessDescription
+);
+router.patch(
+  "/image/:BusinessId",
+  validate(businessImageChange),
+  tokenHandlers.tokenExtractor,
+  authHandlers.UserIsBusiness,
+  businessHandlers.changeBusinessImage
 );
 export { router as businessRotue };

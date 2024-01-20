@@ -174,5 +174,21 @@ const BusinessServices = {
       throw error;
     }
   },
+  updateImage: async (businessId: string, url: string) => {
+    try {
+      const updatedBusiness = await BusinessModel.findByIdAndUpdate(
+        businessId,
+        { businessImage: { url } },
+        { new: true }
+      );
+      if (!updatedBusiness) {
+        throw new Error("business not found");
+      }
+      return updatedBusiness;
+    } catch (error) {
+      // Handle or throw the error as per your error handling strategy
+      throw error;
+    }
+  },
 };
 export { BusinessServices };

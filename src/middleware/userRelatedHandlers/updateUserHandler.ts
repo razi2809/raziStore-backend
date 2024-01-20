@@ -143,9 +143,6 @@ const updateUserHandlers: {
         return res.status(200).json({ message: "your user was deleted" });
       }
       const { UserId: askedUserId } = req.params;
-      if (!mongoose.Types.ObjectId.isValid(askedUserId)) {
-        return next(new myError("Invalid User ID", 400));
-      }
       await userServices.deleteUser(askedUserId);
       return res.status(200).json({ message: "the user was deleted" });
     } catch (e) {
@@ -156,21 +153,18 @@ const updateUserHandlers: {
     const TokenInfo = req.JWT!;
 
     const { userId } = TokenInfo;
-    const { image } = req.body;
+    const { url } = req.body;
     try {
       const myUser = await userServices.findUserById(userId).lean();
       if (!myUser) {
         return next(new myError("could get your user", 500));
       }
       if (!myUser.isAdmin) {
-        await userServices.updateProfilePicture(userId, image);
+        await userServices.updateProfilePicture(userId, url);
         return res.status(200).json({ message: "your profilePic was updated" });
       }
       const { UserId: askedUserId } = req.params;
-      if (!mongoose.Types.ObjectId.isValid(askedUserId)) {
-        return next(new myError("Invalid User ID", 400));
-      }
-      await userServices.updateProfilePicture(askedUserId, image);
+      await userServices.updateProfilePicture(askedUserId, url);
       return res
         .status(200)
         .json({ message: "the user profilePic was updated" });
@@ -193,9 +187,7 @@ const updateUserHandlers: {
         return res.status(200).json({ message: "your name was updated" });
       }
       const { UserId: askedUserId } = req.params;
-      if (!mongoose.Types.ObjectId.isValid(askedUserId)) {
-        return next(new myError("Invalid User ID", 400));
-      }
+
       await userServices.updateName(askedUserId, name);
       return res.status(200).json({ message: "the user name was updated" });
     } catch (e) {
@@ -216,9 +208,7 @@ const updateUserHandlers: {
         return res.status(200).json({ message: "your email was updated" });
       }
       const { UserId: askedUserId } = req.params;
-      if (!mongoose.Types.ObjectId.isValid(askedUserId)) {
-        return next(new myError("Invalid User ID", 400));
-      }
+
       await userServices.updateEmail(askedUserId, email);
       return res.status(200).json({ message: "the user email  was updated" });
     } catch (e) {

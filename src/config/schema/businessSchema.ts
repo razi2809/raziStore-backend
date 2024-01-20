@@ -95,3 +95,13 @@ export const businessDescriptionChange = object({
     }),
   }),
 });
+export const businessImageChange = object({
+  params: object({
+    BusinessId: ObjectId,
+  }),
+  body: object({
+    url: string({
+      required_error: "business should have image",
+    }).url("not an acceptable url"),
+  }),
+});

@@ -15,10 +15,7 @@ const orderHandlers: {
     const body = req.body;
     const { userId } = req.JWT!;
     const { BusinessId } = req.params;
-    // Validate BusinessId
-    if (!mongoose.Types.ObjectId.isValid(BusinessId)) {
-      return next(new myError("Invalid Business ID", 400));
-    }
+
     try {
       // Create a new order
       const order = await orderservices.createOrder(
@@ -57,10 +54,7 @@ const orderHandlers: {
         });
       }
       // Admins can fetch any user's order history
-      const { userId: askedUserId } = req.params;
-      if (!mongoose.Types.ObjectId.isValid(askedUserId)) {
-        return next(new myError("Invalid User ID", 400));
-      }
+      const { UserId: askedUserId } = req.params;
       const orderHistory = await orderservices.getUserOrderHistory(askedUserId);
       if (orderHistory.length === 0) {
         return next(new myError("user has not ordered yet", 404));
@@ -77,11 +71,6 @@ const orderHandlers: {
     // Handler for getting details of a specific order
     const { userId } = req.JWT!;
     const { orderId } = req.params;
-    log.info(orderId);
-    // Validate orderId
-    if (!mongoose.Types.ObjectId.isValid(orderId)) {
-      return next(new myError("Invalid order ID", 400));
-    }
     // Find the user associated with the request
     const User = req.user;
     if (!User) {

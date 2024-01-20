@@ -3,7 +3,6 @@ import { userServices } from "../../services/userServices";
 import { sendEmail } from "../../config/utils/mailer";
 import { myError } from "../../errors/errorType";
 import mongoose from "mongoose";
-import { jwtServices } from "../../services/jwtServices";
 import BusinessModel from "../../config/dataBase/models/businessModel";
 
 const userHandlers: {
@@ -121,10 +120,7 @@ const userHandlers: {
           likedPlaces: likedBusinesses,
         });
       }
-      const { userId: askedUserId } = req.params;
-      if (!mongoose.Types.ObjectId.isValid(askedUserId)) {
-        return next(new myError("Invalid User ID", 400));
-      }
+      const { UserId: askedUserId } = req.params;
       const likedBusinesses = await BusinessModel.find({
         likes: { $in: [askedUserId] },
       });

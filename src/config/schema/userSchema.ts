@@ -129,7 +129,7 @@ export const image = object({
     UserId: ObjectId,
   }),
   body: object({
-    image: string({
+    url: string({
       required_error: "user should have image",
     }).url("not an acceptable url"),
   }),

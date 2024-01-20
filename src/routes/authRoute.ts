@@ -4,7 +4,6 @@ import { loginSchema } from "../config/schema/authSchema";
 import { authHandlers } from "../middleware/authHandler";
 
 const router = Router();
-router.post('/login',validate(loginSchema),authHandlers.logInHandler)
-// router.post('/validate',authHandlers.validateUser)
+router.post("/login", validate(loginSchema), authHandlers.logInHandler);
 
-export {router as authRoter} 
+export { router as authRoter };

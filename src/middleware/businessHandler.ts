@@ -17,6 +17,7 @@ const businessHandlers: {
   changeBusinessName: RequestHandler;
   changeBusinessPhone: RequestHandler;
   changeBusinessDescription: RequestHandler;
+  changeBusinessImage: RequestHandler;
 } = {
   createbusinessHandler: async (req, res, next) => {
     const body = req.body;
@@ -45,9 +46,6 @@ const businessHandlers: {
   },
   findbusinessHandler: async (req, res, next) => {
     const { BusinessId } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(BusinessId)) {
-      return next(new myError("Invalid Business ID", 400));
-    }
     try {
       const business = await BusinessServices.findBusinessById(BusinessId);
       if (!business) {
@@ -159,6 +157,17 @@ const businessHandlers: {
       return res
         .status(200)
         .json({ message: "business description was updated" });
+    } catch (e) {
+      return next(e);
+    }
+  },
+  changeBusinessImage: async (req, res, next) => {
+    const { BusinessId } = req.params;
+    const { url } = req.body;
+
+    try {
+      await BusinessServices.updateImage(BusinessId, url);
+      return res.status(200).json({ message: "business image was updated" });
     } catch (e) {
       return next(e);
     }
