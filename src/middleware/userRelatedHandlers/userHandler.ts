@@ -1,9 +1,9 @@
 import { RequestHandler } from "express";
 import { userServices } from "../../services/userServices";
-import { sendEmail } from "../../config/utils/mailer";
 import { myError } from "../../errors/errorType";
 import mongoose from "mongoose";
 import BusinessModel from "../../config/dataBase/models/businessModel";
+import { MSQ } from "../../config/utils/sendGrid";
 
 const userHandlers: {
   createUserHandler: RequestHandler;
@@ -17,13 +17,17 @@ const userHandlers: {
     try {
       // Create user and send verification email
       const user = await userServices.createUser(body);
-      await sendEmail({
-        from: "razi289@outlook.com",
-        to: user.email,
-        subject: "please verify your account",
-        text: `verification code ${user.verificationCode}. email:${user.email}`,
+      const emailToSend = new MSQ(
+        `${user.email}`,
+        "razi289@outlook.com",
+        "please verify your account",
+        `verification code ${user.verificationCode}. email:${user.email}`
+      );
+
+      emailToSend.sendEmail();
+      return res.status(200).json({
+        message: "User successfully created and verification email has sent",
       });
-      return res.status(200).json({ message: "User successfully created" });
     } catch (e) {
       return next(e);
     }

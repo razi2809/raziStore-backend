@@ -1,7 +1,6 @@
 import { Address, Name } from "../config/dataBase/models/classes";
 import UserModel, { User } from "../config/dataBase/models/userModel";
 import { v4 as uuidv4 } from "uuid";
-import log from "../config/utils/logger";
 import { myError } from "../errors/errorType";
 
 const userServices = {
@@ -54,7 +53,6 @@ const userServices = {
       user.password = password;
       await user.save();
     } catch (error) {
-      // Handle or throw the error as per your error handling strategy
       throw error;
     }
   },
@@ -80,7 +78,6 @@ const userServices = {
         throw new Error("User not found");
       }
     } catch (error) {
-      // Handle or throw the error as per your error handling strategy
       throw error;
     }
   },
@@ -97,7 +94,6 @@ const userServices = {
         throw new Error("User not found");
       }
     } catch (error) {
-      // Handle or throw the error as per your error handling strategy
       throw error;
     }
   },
@@ -110,7 +106,6 @@ const userServices = {
       user.name = name;
       user.save();
     } catch (error) {
-      // Handle or throw the error as per your error handling strategy
       throw error;
     }
   },
@@ -126,7 +121,6 @@ const userServices = {
       }
       return updatedUser;
     } catch (error) {
-      // Handle or throw the error as per your error handling strategy
       throw error;
     }
   },
@@ -142,7 +136,6 @@ const userServices = {
       }
       return updatedUser;
     } catch (error) {
-      // Handle or throw the error as per your error handling strategy
       throw error;
     }
   },

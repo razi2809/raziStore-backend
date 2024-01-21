@@ -1,5 +1,4 @@
 import ProductModel, { Product } from "../config/dataBase/models/productModel";
-import log from "../config/utils/logger";
 import { myError } from "../errors/errorType";
 import { BusinessServices } from "./businessServices";
 import { userServices } from "./userServices";
@@ -60,7 +59,6 @@ const productServies = {
       }
       return updatedproduct;
     } catch (error) {
-      // Handle or throw the error as per your error handling strategy
       throw error;
     }
   },
@@ -76,7 +74,6 @@ const productServies = {
       }
       return updatedproduct;
     } catch (error) {
-      // Handle or throw the error as per your error handling strategy
       throw error;
     }
   },
@@ -92,7 +89,6 @@ const productServies = {
       }
       return updatedproduct;
     } catch (error) {
-      // Handle or throw the error as per your error handling strategy
       throw error;
     }
   },
@@ -108,7 +104,6 @@ const productServies = {
       }
       return updatedproduct;
     } catch (error) {
-      // Handle or throw the error as per your error handling strategy
       throw error;
     }
   },

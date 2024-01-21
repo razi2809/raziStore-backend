@@ -119,7 +119,6 @@ const BusinessServices = {
       }
       return updatedBusiness;
     } catch (error) {
-      // Handle or throw the error as per your error handling strategy
       throw error;
     }
   },
@@ -135,7 +134,6 @@ const BusinessServices = {
       }
       return updatedBusiness;
     } catch (error) {
-      // Handle or throw the error as per your error handling strategy
       throw error;
     }
   },
@@ -151,7 +149,6 @@ const BusinessServices = {
       }
       return updatedBusiness;
     } catch (error) {
-      // Handle or throw the error as per your error handling strategy
       throw error;
     }
   },
@@ -170,7 +167,6 @@ const BusinessServices = {
       }
       return updatedBusiness;
     } catch (error) {
-      // Handle or throw the error as per your error handling strategy
       throw error;
     }
   },
@@ -186,7 +182,6 @@ const BusinessServices = {
       }
       return updatedBusiness;
     } catch (error) {
-      // Handle or throw the error as per your error handling strategy
       throw error;
     }
   },

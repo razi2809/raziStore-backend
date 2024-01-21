@@ -61,7 +61,7 @@ const authHandlers: {
   },
   UserIsVerified: async (req, res, next) => {
     const TokenInfo = req.JWT!;
-
+    log.info(TokenInfo);
     const user = await userServices.findUserByEmail(TokenInfo.email);
     if (!user) {
       return next(new myError("user not found", 404));

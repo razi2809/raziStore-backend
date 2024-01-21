@@ -1,10 +1,10 @@
 import { RequestHandler } from "express";
 import { userServices } from "../../services/userServices";
 import { myError } from "../../errors/errorType";
-import { sendEmail } from "../../config/utils/mailer";
 import log from "../../config/utils/logger";
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
+import { MSQ } from "../../config/utils/sendGrid";
 
 const updateUserHandlers: {
   verifyUserHandler: RequestHandler;
@@ -12,7 +12,7 @@ const updateUserHandlers: {
   resetPasswordHadler: RequestHandler;
   changeUserThemeHandler: RequestHandler;
   deleteUserHandler: RequestHandler;
-  addUserAdressHandler: RequestHandler;
+  addUserAddressHandler: RequestHandler;
   changeUserProfilePicHandler: RequestHandler;
   changeUserNameHandler: RequestHandler;
   changeUserEmailHandler: RequestHandler;
@@ -60,13 +60,14 @@ const updateUserHandlers: {
       const passwordResetCode = uuidv4();
       user.passwordResetCode = passwordResetCode;
       await user.save();
-      await sendEmail({
-        to: user.email,
-        from: "razi289@outlook.com",
-        subject: "reset your code",
-        text: ` password reset code:${passwordResetCode}. email: ${user.email}`,
-      });
-      log.info(`password reset email sent to ${email}`);
+      const emailToSend = new MSQ(
+        `${user.email}`,
+        "razi289@outlook.com",
+        "reset your password code",
+        `password reset code:${passwordResetCode}. email:${user.email}`
+      );
+
+      emailToSend.sendEmail();
       return res.json({ message: message });
     } catch (e) {
       return next(e);
@@ -108,7 +109,7 @@ const updateUserHandlers: {
       return next(e);
     }
   },
-  addUserAdressHandler: async (req, res, next) => {
+  addUserAddressHandler: async (req, res, next) => {
     // Handler to add a new address fomr a user
     const { address } = req.body;
     // Add new address to user's profile

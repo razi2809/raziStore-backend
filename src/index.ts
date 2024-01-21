@@ -7,6 +7,7 @@ import { authRoter } from "./routes/authRoute";
 import { businessRotue } from "./routes/businessRoute";
 import { prodectRotue } from "./routes/productRoute";
 import { orderRouter } from "./routes/orderRoute";
+import { MSQ } from "./config/utils/sendGrid";
 require("./services/googleAuth");
 configEnv();
 connectToDB();

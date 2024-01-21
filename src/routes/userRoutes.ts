@@ -69,7 +69,7 @@ router.patch(
   validate(addAdressSchema),
   tokenHandlers.tokenExtractor,
   authHandlers.UserIsVerified,
-  updateUserHandlers.addUserAdressHandler
+  updateUserHandlers.addUserAddressHandler
 );
 router.delete(
   "/:UserId",
