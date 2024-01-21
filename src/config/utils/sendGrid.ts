@@ -1,4 +1,5 @@
 import sgMail from "@sendgrid/mail";
+import log from "./logger";
 const SENDGRID_API_KEY =
   "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";
 sgMail.setApiKey(SENDGRID_API_KEY);
@@ -25,10 +26,10 @@ export class MSQ {
     sgMail
       .send(msg)
       .then(() => {
-        console.log("Email sent");
+        log.info("Email sent");
       })
       .catch((error) => {
-        console.error(error);
+        log.error(error);
       });
   }
 }
