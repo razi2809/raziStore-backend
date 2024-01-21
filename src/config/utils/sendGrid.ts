@@ -1,7 +1,6 @@
 import sgMail from "@sendgrid/mail";
 import log from "./logger";
-const SENDGRID_API_KEY =
-  "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";
+const SENDGRID_API_KEY = "private and cant be upload to git";
 sgMail.setApiKey(SENDGRID_API_KEY);
 export class MSQ {
   to: string;
