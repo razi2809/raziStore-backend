@@ -1,6 +1,6 @@
 import sgMail from "@sendgrid/mail";
 const SENDGRID_API_KEY =
-  "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";
+  "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";
 sgMail.setApiKey(SENDGRID_API_KEY);
 export class MSQ {
   to: string;
