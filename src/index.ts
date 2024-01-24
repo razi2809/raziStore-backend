@@ -7,7 +7,7 @@ import { authRoter } from "./routes/authRoute";
 import { businessRotue } from "./routes/businessRoute";
 import { prodectRotue } from "./routes/productRoute";
 import { orderRouter } from "./routes/orderRoute";
-import { MSQ } from "./config/utils/sendGrid";
+import morgan from "morgan";
 require("./services/googleAuth");
 configEnv();
 connectToDB();
@@ -15,7 +15,7 @@ var cors = require("cors");
 const app = express();
 app.use(express.json());
 app.use(cors());
-
+app.use(morgan("tiny"));
 app.listen(process.env.PORT);
 app.use("/business", businessRotue);
 app.use("/users", userRoter);

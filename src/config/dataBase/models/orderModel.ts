@@ -4,7 +4,7 @@ import {
   modelOptions,
   prop,
 } from "@typegoose/typegoose";
-import { Image } from "./classes";
+import { Address, Image } from "./classes";
 
 class business {
   @prop()
@@ -42,6 +42,8 @@ export class Order {
   userId: string;
   @prop({ required: true })
   price: number;
+  @prop({ required: true })
+  address: Address;
 }
 const OrderModel = getModelForClass(Order);
 export default OrderModel;
