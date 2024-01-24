@@ -13,7 +13,7 @@ export const createOrderSchema = object({
   body: object({
     products: array(Product),
     price: number({ required_error: "price is required" }),
-    address: array(address),
+    address: address,
   }),
 });
 export const getOrderSchema = object({

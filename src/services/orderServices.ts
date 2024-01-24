@@ -1,4 +1,4 @@
-import { Image } from "../config/dataBase/models/classes";
+import { Address, Image } from "../config/dataBase/models/classes";
 import OrderModel, { Order } from "../config/dataBase/models/orderModel";
 import log from "../config/utils/logger";
 import { myError } from "../errors/errorType";
@@ -14,7 +14,8 @@ const orderservices = {
     }[],
     userId: string,
     businessId: string,
-    price: number
+    price: number,
+    address: Address
   ) => {
     try {
       const businessdata = await BusinessServices.findBusinessById(businessId);
@@ -54,6 +55,7 @@ const orderservices = {
         userId,
         business,
         price,
+        address,
       });
       await BusinessServices.addOrderToBuisness(
         businessId,

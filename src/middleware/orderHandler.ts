@@ -15,14 +15,14 @@ const orderHandlers: {
     const body = req.body;
     const { userId } = req.JWT!;
     const { BusinessId } = req.params;
-
     try {
       // Create a new order
       const order = await orderservices.createOrder(
         body.products,
         userId,
         BusinessId,
-        body.price
+        body.price,
+        body.address
       );
       // Check for errors in order creation
       if (order instanceof myError) {
