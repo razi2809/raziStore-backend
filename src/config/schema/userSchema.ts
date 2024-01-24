@@ -1,7 +1,7 @@
 import { TypeOf, array, number, object, string, z } from "zod";
 import { passwordPattern, phoneNumberPattern } from "./pattern";
 import { Address, Image, Name } from "../dataBase/models/classes";
-const address = object({
+export const address = object({
   city: string({
     required_error: "city is required",
   }),

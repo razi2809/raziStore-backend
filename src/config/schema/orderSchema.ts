@@ -1,5 +1,5 @@
 import { array, number, object, string } from "zod";
-import { ObjectId } from "./userSchema";
+import { ObjectId, address } from "./userSchema";
 const Product = object({
   productId: ObjectId,
   productQuantity: number({
@@ -13,6 +13,7 @@ export const createOrderSchema = object({
   body: object({
     products: array(Product),
     price: number({ required_error: "price is required" }),
+    address: array(address),
   }),
 });
 export const getOrderSchema = object({

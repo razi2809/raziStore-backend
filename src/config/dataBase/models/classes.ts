@@ -7,10 +7,8 @@ export class Address {
   addressName: string;
   @prop({ default: "Bograsov" })
   street: string;
-
   @prop({ default: "Tel-aviv" })
   city: string;
-
   @prop({ default: 1 })
   buildingNumber: Number;
   @prop({ required: true })
