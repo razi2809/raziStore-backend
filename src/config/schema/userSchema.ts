@@ -172,3 +172,16 @@ export const phoneChange = object({
     }).regex(phoneNumberPattern, "invaild phone number"),
   }),
 });
+export const request = object({
+  body: object({
+    email: string().email("not a valid email"),
+    fullName: string({
+      required_error: "fullName is required",
+    }),
+    phoneNumber: string({
+      required_error: "phoneNumber is required",
+    }).regex(phoneNumberPattern, "invaild phone number"),
+  }),
+  request: string().min(10).max(40),
+  freeText: string().min(2).max(35),
+});

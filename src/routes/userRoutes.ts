@@ -9,6 +9,7 @@ import {
   nameChange,
   passwordReset,
   phoneChange,
+  request,
   userEmailChange,
   verifyUser,
 } from "../config/schema/userSchema";
@@ -101,4 +102,5 @@ router.patch(
   tokenHandlers.tokenExtractor,
   updateUserHandlers.changeUserPhoneHandler
 );
+router.post("/request", validate(request), userHandlers.userRequest);
 export { router as userRoter };

@@ -10,6 +10,7 @@ const userHandlers: {
   getUsersHandler: RequestHandler;
   getUserHandler: RequestHandler;
   getLikedPlaces: RequestHandler;
+  userRequest: RequestHandler;
 } = {
   createUserHandler: async (req, res, next) => {
     // Handler to create a new user
@@ -140,6 +141,24 @@ const userHandlers: {
     } catch (e) {
       return next(e);
     }
+  },
+  userRequest: async (req, res, next) => {
+    const { fullName, email, phoneNumber, request, freeText } = req.body;
+    const emailToSendToUser = new MSQ(
+      `${email}`,
+      "razi289@outlook.com",
+      `${request}`,
+      `your request ${request} has been sent to the developer thank you for taking an active part in my project`
+    );
+    const emailToSendToDev = new MSQ(
+      "razi289@outlook.com",
+      `${email}`,
+      `${request}`,
+      `user phone:${phoneNumber}, user request:${freeText}`
+    );
+    return res.status(200).json({
+      message: "your message has been sent to our developr",
+    });
   },
 };
 export { userHandlers };
