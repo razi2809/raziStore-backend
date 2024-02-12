@@ -181,7 +181,8 @@ export const request = object({
     phoneNumber: string({
       required_error: "phoneNumber is required",
     }).regex(phoneNumberPattern, "invaild phone number"),
+
+    request: string({ required_error: "request is required" }),
+    freeText: string({ required_error: "freeText is required" }),
   }),
-  request: string().min(10).max(40),
-  freeText: string().min(2).max(35),
 });

@@ -4,6 +4,7 @@ import { myError } from "../../errors/errorType";
 import mongoose from "mongoose";
 import BusinessModel from "../../config/dataBase/models/businessModel";
 import { MSQ } from "../../config/utils/sendGrid";
+import log from "../../config/utils/logger";
 
 const userHandlers: {
   createUserHandler: RequestHandler;
@@ -151,11 +152,14 @@ const userHandlers: {
       `your request ${request} has been sent to the developer thank you for taking an active part in my project`
     );
     const emailToSendToDev = new MSQ(
+      `razi28080@gmail.com`,
       "razi289@outlook.com",
-      `${email}`,
       `${request}`,
-      `user phone:${phoneNumber}, user request:${freeText}`
+      `user phone:${phoneNumber},user email:${email} user request:${freeText}`
     );
+
+    emailToSendToUser.sendEmail();
+    emailToSendToDev.sendEmail();
     return res.status(200).json({
       message: "your message has been sent to our developr",
     });

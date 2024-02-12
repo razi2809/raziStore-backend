@@ -1,6 +1,7 @@
 import { ErrorRequestHandler } from "express";
 import { myError } from "./errorType";
 import { ZodError } from "zod";
+import log from "../config/utils/logger";
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   if (err instanceof myError) {
@@ -22,8 +23,11 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     });
   }
   if (err instanceof ZodError) {
+    log.info(err);
     return res.status(400).json({
-      message: "Validation error " + err.issues.map((issue) => issue.message),
+      message:
+        "Validation error " +
+        err.issues.map((issue) => issue.message + " path:" + issue.path),
     });
   }
   return res.status(500).json({
